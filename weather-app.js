@@ -24,16 +24,25 @@ async function main (location) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${date}?key=79A79ES6BP5MNJBRSCYC6UBYQ&contentType=json`;
     const weatherData = await getWeatherData(url);
     const currentTemp = getCurrentTemp(weatherData);
-    console.log(currentTemp);
+    return currentTemp;
 
   } catch (error) {
     console.error('An error occurred in the main function:', error);
   }
 }
 
-const searchButton = document.querySelector('button');
-const locationInput = document.querySelector('#location');
-searchButton.addEventListener('click', () => {
-  const location = locationInput.value;
-  main(location);
-});
+function display () {
+  const searchButton = document.querySelector('button');
+  const locationInput = document.querySelector('#location');
+  const displayDiv = document.createElement('div');
+  document.body.appendChild(displayDiv);
+  searchButton.addEventListener('click', async () => {
+    const location = locationInput.value;
+    const temp = await main(location);
+    console.log(temp); // temp is a promise so need to use await
+    displayDiv.textContent = temp;
+  });
+}
+
+display();
+
