@@ -14,8 +14,47 @@ async function getWeatherData (url) {
   
 }
 
-function getCurrentTemp (data) {
-  return data.currentConditions.temp;
+function processWeatherData (data) {
+  console.log(data);
+  // Check if data and necessary nested properties exist
+  if (!data || !data.currentConditions || !Array.isArray(data.days) || !data.days[0].hours) {
+    console.error('Invalid data structure received');
+    return null;
+  }
+
+  // Check if required properties exist or provide fallback values
+  const processedData = {
+    location: data.resolvedAddress || 'Unknown',
+    tzoffset: data.tzoffset ?? 'N/A',
+    currentConditions: data.currentConditions.conditions || 'Unknown',
+    currentTemp: data.currentConditions.temp ?? 'N/A', // Use nullish coalescing for numbers since 0 is falsy
+    sunrise: data.currentConditions.sunrise || 'N/A',
+    sunset: data.currentConditions.sunset || 'N/A',
+    forecast: [
+      {
+        temp: data.days[0].hours[6]?.temp ?? 'N/A', 
+        conditions: data.days[0].hours[6]?.conditions || 'Unknown'
+      },
+      {
+        temp: data.days[0].hours[9]?.temp ?? 'N/A',
+        conditions: data.days[0].hours[9]?.conditions || 'Unknown'
+      },
+      {
+        temp: data.days[0].hours[12]?.temp ?? 'N/A',
+        conditions: data.days[0].hours[12]?.conditions || 'Unknown'
+      },
+      {
+        temp: data.days[0].hours[15]?.temp ?? 'N/A',
+        conditions: data.days[0].hours[15]?.conditions || 'Unknown'
+      },
+      {
+        temp: data.days[0].hours[18]?.temp ?? 'N/A',
+        conditions: data.days[0].hours[18]?.conditions || 'Unknown'
+      },
+    ],
+  };
+
+  return processedData;
 }
 
 async function main (location) {
@@ -23,8 +62,8 @@ async function main (location) {
     const date = new Date(Date.now()).toISOString();
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${date}?key=79A79ES6BP5MNJBRSCYC6UBYQ&contentType=json`;
     const weatherData = await getWeatherData(url);
-    const currentTemp = getCurrentTemp(weatherData);
-    return currentTemp;
+    const processedData = processWeatherData(weatherData);
+    return processedData;
 
   } catch (error) {
     console.error('An error occurred in the main function:', error);
@@ -33,16 +72,19 @@ async function main (location) {
 
 function display () {
   const searchButton = document.querySelector('button');
-  const locationInput = document.querySelector('#location');
-  const displayDiv = document.createElement('div');
-  document.body.appendChild(displayDiv);
+  const locationInput = document.querySelector('#search-location');
+  const location = document.querySelector('#location');
+  const currentTemp = document.querySelector('#current-temp');
   searchButton.addEventListener('click', async () => {
-    const location = locationInput.value;
-    const temp = await main(location);
-    console.log(temp); // temp is a promise so need to use await
-    displayDiv.textContent = temp;
+    location.textContent = '';
+    currentTemp.textContent = '';
+    const searchLocation = locationInput.value;
+    const processedData = await main(searchLocation);
+    location.textContent = processedData.location;
+    currentTemp.textContent = processedData.currentTemp;
   });
 }
 
 display();
+
 
