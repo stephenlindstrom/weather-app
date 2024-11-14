@@ -1,4 +1,5 @@
 import "./style.css";
+import { formatInTimeZone } from "date-fns-tz";
 
 async function getWeatherData (url) {
   try {
@@ -17,7 +18,6 @@ async function getWeatherData (url) {
 }
 
 function processWeatherData (data) {
-  console.log(data);
   // Check if data and necessary nested properties exist
   if (!data || !data.currentConditions || !Array.isArray(data.days) || !data.days[0].hours) {
     console.error('Invalid data structure received');
@@ -27,7 +27,7 @@ function processWeatherData (data) {
   // Check if required properties exist or provide fallback values
   const processedData = {
     location: data.resolvedAddress || 'Unknown',
-    tzoffset: data.tzoffset ?? 'N/A',
+    timezone: data.timezone || 'Unknown',
     currentConditions: data.currentConditions.conditions || 'Unknown',
     currentTemp: data.currentConditions.temp ?? 'N/A', // Use nullish coalescing for numbers since 0 is falsy
     sunrise: data.currentConditions.sunrise || 'N/A',
@@ -86,22 +86,9 @@ function display () {
     const processedData = await main(searchLocation);
     location.textContent = processedData.location;
     currentTemp.textContent = processedData.currentTemp;
-    const date = getTimeWithOffset(processedData.tzoffset*60);
-    console.log(date);
-    datetime.textContent = date;
+    const zonedDate = formatInTimeZone(new Date(), processedData.timezone, 'PPP p') 
+    datetime.textContent = zonedDate;
   });
 }
 
 display();
-
-function getTimeWithOffset(offsetInMinutes) {
-  // Get the current date and time in UTC
-  const currentUTCDate = new Date();
-
-  // Calculate the local time by adding the offset (convert offset to milliseconds)
-  const localTime = new Date(currentUTCDate.getTime() + offsetInMinutes * 60000);
-
-  // Format the adjusted time as a readable string
-  return localTime.toISOString();
-}
-
