@@ -42,7 +42,7 @@ function processWeatherData (data) {
     location: data.resolvedAddress,
     timezone: data.timezone,
     currentConditions: data.currentConditions.conditions,
-    currentTemp: data.currentConditions.temp,
+    currentTemp: Math.round(data.currentConditions.temp),
     sunrise: data.currentConditions.sunrise,
     sunset: data.currentConditions.sunset,
     forecast: [6, 9, 12, 15, 18].map(hour => ({
@@ -83,7 +83,7 @@ function userInterface () {
     const searchLocation = locationInput.value;
     const processedData = await main(searchLocation);
     location.textContent = processedData.location;
-    currentTemp.textContent = processedData.currentTemp;
+    currentTemp.textContent = processedData.currentTemp + "\u00B0";
     displayCurrentDate(processedData.timezone);
     dateIntervalID = setInterval(displayCurrentDate, 1000*60, processedData.timezone);
     displayCurrentTime(processedData.timezone);
