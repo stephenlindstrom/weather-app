@@ -68,23 +68,41 @@ async function main (location) {
   }
 }
 
-function display () {
+function userInterface () {
   const searchButton = document.querySelector('button');
   const locationInput = document.querySelector('#search-location');
-  const datetime = document.querySelector('#datetime');
   const location = document.querySelector('#location');
   const currentTemp = document.querySelector('#current-temp');
+  let dateIntervalID;
+  let timeIntervalID;
   searchButton.addEventListener('click', async () => {
-    datetime.textContent = '';
     location.textContent = '';
     currentTemp.textContent = '';
+    clearInterval(dateIntervalID);
+    clearInterval(timeIntervalID);
     const searchLocation = locationInput.value;
     const processedData = await main(searchLocation);
     location.textContent = processedData.location;
     currentTemp.textContent = processedData.currentTemp;
-    const zonedDate = formatInTimeZone(new Date(), processedData.timezone, 'PPP p') 
-    datetime.textContent = zonedDate;
+    displayCurrentDate(processedData.timezone);
+    dateIntervalID = setInterval(displayCurrentDate, 1000*60, processedData.timezone);
+    displayCurrentTime(processedData.timezone);
+    timeIntervalID = setInterval(displayCurrentTime, 1000, processedData.timezone);
   });
 }
 
-display();
+function displayCurrentTime (timezone) {
+  const time = document.querySelector('#time');
+  time.textContent = '';
+  const zonedTime = formatInTimeZone(new Date(), timezone, 'p');
+  time.textContent = zonedTime;
+}
+
+function displayCurrentDate (timezone) {
+  const date = document.querySelector('#date');
+  date.textContent = '';
+  const zonedDate = formatInTimeZone(new Date(), timezone, 'PPP');
+  date.textContent = zonedDate;
+}
+
+userInterface();
