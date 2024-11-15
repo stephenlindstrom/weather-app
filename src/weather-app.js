@@ -19,41 +19,36 @@ async function getWeatherData (url) {
 
 function processWeatherData (data) {
   // Check if data and necessary nested properties exist
-  if (!data || !data.currentConditions || !Array.isArray(data.days) || !data.days[0].hours) {
-    console.error('Invalid data structure received');
-    return null;
+  if (
+    !data ||
+    !data.resolvedAddress ||
+    !data.timezone ||
+    !data.currentConditions ||
+    !data.currentConditions.conditions ||
+    !data.currentConditions.temp ||
+    !data.currentConditions.sunrise ||
+    !data.currentConditions.sunset ||
+    !Array.isArray(data.days) ||
+    data.days.length === 0 ||
+    !data.days[0].hours ||
+    data.days[0].hours.length < 19
+  ) {
+    console.error('Error: Missing essential data');
+    return { error: true, message: 'Data not available. Please try again later.' };
   }
 
-  // Check if required properties exist or provide fallback values
+  // Create object with necessary data, provide fallback values for unnecessary data
   const processedData = {
-    location: data.resolvedAddress || 'Unknown',
-    timezone: data.timezone || 'Unknown',
-    currentConditions: data.currentConditions.conditions || 'Unknown',
-    currentTemp: data.currentConditions.temp ?? 'N/A', // Use nullish coalescing for numbers since 0 is falsy
-    sunrise: data.currentConditions.sunrise || 'N/A',
-    sunset: data.currentConditions.sunset || 'N/A',
-    forecast: [
-      {
-        temp: data.days[0].hours[6]?.temp ?? 'N/A', 
-        conditions: data.days[0].hours[6]?.conditions || 'Unknown'
-      },
-      {
-        temp: data.days[0].hours[9]?.temp ?? 'N/A',
-        conditions: data.days[0].hours[9]?.conditions || 'Unknown'
-      },
-      {
-        temp: data.days[0].hours[12]?.temp ?? 'N/A',
-        conditions: data.days[0].hours[12]?.conditions || 'Unknown'
-      },
-      {
-        temp: data.days[0].hours[15]?.temp ?? 'N/A',
-        conditions: data.days[0].hours[15]?.conditions || 'Unknown'
-      },
-      {
-        temp: data.days[0].hours[18]?.temp ?? 'N/A',
-        conditions: data.days[0].hours[18]?.conditions || 'Unknown'
-      },
-    ],
+    location: data.resolvedAddress,
+    timezone: data.timezone,
+    currentConditions: data.currentConditions.conditions,
+    currentTemp: data.currentConditions.temp,
+    sunrise: data.currentConditions.sunrise,
+    sunset: data.currentConditions.sunset,
+    forecast: [6, 9, 12, 15, 18].map(hour => ({
+      temp: data.days[0].hours[hour]?.temp ?? 'N/A',
+      conditions: data.days[0].hours[hour]?.conditions || 'Unknown',
+    })),
   };
 
   return processedData;
@@ -65,6 +60,7 @@ async function main (location) {
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${date}?key=79A79ES6BP5MNJBRSCYC6UBYQ&contentType=json`;
     const weatherData = await getWeatherData(url);
     const processedData = processWeatherData(weatherData);
+    console.log(processedData);
     return processedData;
 
   } catch (error) {
