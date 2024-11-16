@@ -1,5 +1,5 @@
 import "./style.css";
-import { formatInTimeZone } from "date-fns-tz";
+import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 
 async function getWeatherData (url) {
   try {
@@ -57,7 +57,7 @@ function processWeatherData (data) {
 async function main (location) {
   try {
     const date = new Date(Date.now()).toISOString();
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${date}?key=79A79ES6BP5MNJBRSCYC6UBYQ&contentType=json`;
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${date}?key=79A79ES6BP5MNJBRSCYC6UBYQ&contentType=json&lang=id`;
     const weatherData = await getWeatherData(url);
     const processedData = processWeatherData(weatherData);
     console.log(processedData);
@@ -82,12 +82,14 @@ function userInterface () {
     clearInterval(timeIntervalID);
     const searchLocation = locationInput.value;
     const processedData = await main(searchLocation);
+    console.log(processedData);
     location.textContent = processedData.location;
     currentTemp.textContent = processedData.currentTemp + "\u00B0";
     displayCurrentDate(processedData.timezone);
     dateIntervalID = setInterval(displayCurrentDate, 1000*60, processedData.timezone);
     displayCurrentTime(processedData.timezone);
     timeIntervalID = setInterval(displayCurrentTime, 1000, processedData.timezone);
+    displayBackground(processedData.sunrise, processedData.sunset, processedData.timezone);
   });
 }
 
@@ -103,6 +105,31 @@ function displayCurrentDate (timezone) {
   date.textContent = '';
   const zonedDate = formatInTimeZone(new Date(), timezone, 'PPP');
   date.textContent = zonedDate;
+}
+
+function displayConditionImage (conditions) {
+  const container = document.querySelector('.flex-container-column');
+  if (conditions.search(/type_21|type_41|type_42/) != -1) {
+    container.style.background = "linear-gradient(rgb(175, 175, 201), rgb(64, 63, 80))";
+  } else if (conditions === 'Clear') {
+    container.style.background = "linear-gradient(rgb(255, 211, 65), rgb(255, 165, 0))"
+  }
+}
+
+function displayBackground(sunrise, sunset, timezone) {
+  const container = document.querySelector('.flex-container-column');
+  const currentDate = formatInTimeZone(new Date(), timezone, 'yyyy-MM-dd');
+  const dateWithSunrise = currentDate + "T" + sunrise;
+  const dateWithSunset = currentDate + "T" + sunset;
+  const utcDateSunrise = fromZonedTime(dateWithSunrise, timezone);
+  const utcDateSunset = fromZonedTime(dateWithSunset, timezone);
+  if (utcDateSunrise < new Date() && new Date() < utcDateSunset) {
+    container.style.background = "linear-gradient(rgb(255, 211, 65), rgb(255, 165, 0))";
+    container.style.color = 'black';
+  } else {
+    container.style.background = "linear-gradient(rgb(106, 106, 128), rgb(49, 49, 58));";
+    container.style.color = 'white';
+  }
 }
 
 userInterface();

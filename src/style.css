@@ -5,10 +5,12 @@
   width: 500px;
   border: 2px solid black;
   padding: 50px;
+  background-image: linear-gradient(rgb(106, 106, 128), rgb(49, 49, 58));
 }
 
 .flex-item {
   margin-bottom: 10px;
+  font-family: Verdana, Tahoma, sans-serif
 }
 
 #current-temp {
