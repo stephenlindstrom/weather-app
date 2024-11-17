@@ -127,7 +127,7 @@ function displayBackground(sunrise, sunset, timezone) {
     container.style.background = "linear-gradient(rgb(255, 211, 65), rgb(255, 165, 0))";
     container.style.color = 'black';
   } else {
-    container.style.background = "linear-gradient(rgb(106, 106, 128), rgb(49, 49, 58));";
+    container.style.background = "linear-gradient(rgb(106, 106, 128), rgb(49, 49, 58))";
     container.style.color = 'white';
   }
 }
