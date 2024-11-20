@@ -5,7 +5,8 @@
   width: 500px;
   border: 2px solid black;
   padding: 50px;
-  background-image: linear-gradient(rgb(106, 106, 128), rgb(49, 49, 58));
+  background-color: rgb(89, 202, 240);
+  color: white;
 }
 
 .flex-item {

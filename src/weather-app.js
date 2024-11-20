@@ -1,5 +1,10 @@
 import "./style.css";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
+import snowImage from './icons/snow-white.png';
+import sunnyImage from './icons/sunny-white.png';
+import rainImage from './icons/rain-white.png';
+import overcastImage from './icons/overcast-white.png';
+import partlyCloudyImage from './icons/partly-cloudy-white.png';
 
 async function getWeatherData (url) {
   try {
@@ -90,6 +95,7 @@ function userInterface () {
     displayCurrentTime(processedData.timezone);
     timeIntervalID = setInterval(displayCurrentTime, 1000, processedData.timezone);
     displayBackground(processedData.sunrise, processedData.sunset, processedData.timezone);
+    displayConditionImage(processedData.currentConditions);
   });
 }
 
@@ -108,11 +114,28 @@ function displayCurrentDate (timezone) {
 }
 
 function displayConditionImage (conditions) {
-  const container = document.querySelector('.flex-container-column');
-  if (conditions.search(/type_21|type_41|type_42/) != -1) {
-    container.style.background = "linear-gradient(rgb(175, 175, 201), rgb(64, 63, 80))";
-  } else if (conditions === 'Clear') {
-    container.style.background = "linear-gradient(rgb(255, 211, 65), rgb(255, 165, 0))"
+  const img = document.querySelector('#condition-icon');
+  
+  const snowRegex = /\b(type_1|type_22|type_23|type_31|type_32|type_33|type_34|type_35)\b/;
+  const rainRegex = /\b(type_2|type_3|type_4|type_5|type_6|type_9|type_10|type_11|type_13|type_14|type_21|type_24|type_25|type_26)\b/;
+  const overcastRegex = /\btype_41\b/;
+  const partlyCloudyRegex = /\btype_42\b/;
+  const sunnyRegex = /\btype_43\b/;
+
+  if (snowRegex.test(conditions)) {
+    img.src = snowImage;
+  }
+  else if (rainRegex.test(conditions)) {
+    img.src = rainImage;
+  }
+  else if (overcastRegex.test(conditions)) {
+    img.src = overcastImage;
+  }
+  else if (partlyCloudyRegex.test(conditions)) {
+    img.src = partlyCloudyImage;
+  }
+  else if (sunnyRegex.test(conditions)) {
+    img.src = sunnyImage;
   }
 }
 
@@ -124,11 +147,9 @@ function displayBackground(sunrise, sunset, timezone) {
   const utcDateSunrise = fromZonedTime(dateWithSunrise, timezone);
   const utcDateSunset = fromZonedTime(dateWithSunset, timezone);
   if (utcDateSunrise < new Date() && new Date() < utcDateSunset) {
-    container.style.background = "linear-gradient(rgb(255, 211, 65), rgb(255, 165, 0))";
-    container.style.color = 'black';
+    container.style.background = "rgb(89, 202, 240)";
   } else {
     container.style.background = "linear-gradient(rgb(106, 106, 128), rgb(49, 49, 58))";
-    container.style.color = 'white';
   }
 }
 
