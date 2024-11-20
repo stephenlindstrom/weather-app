@@ -50,9 +50,13 @@ function processWeatherData (data) {
     currentTemp: Math.round(data.currentConditions.temp),
     sunrise: data.currentConditions.sunrise,
     sunset: data.currentConditions.sunset,
-    forecast: [6, 9, 12, 15, 18].map(hour => ({
+    forecastToday: [0, 3, 6, 9, 12, 15, 18, 21].map(hour => ({
       temp: data.days[0].hours[hour]?.temp ?? 'N/A',
       conditions: data.days[0].hours[hour]?.conditions || 'Unknown',
+    })),
+    forecastTomorrow: [0, 3, 6, 9, 12, 15, 18, 21].map(hour => ({
+      temp: data.days[1].hours[hour]?.temp ?? 'N/A',
+      conditions: data.days[1].hours[hour]?.conditions || 'Unknown',
     })),
   };
 
@@ -61,9 +65,13 @@ function processWeatherData (data) {
 
 async function main (location) {
   try {
-    const date = new Date(Date.now()).toISOString();
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${date}?key=79A79ES6BP5MNJBRSCYC6UBYQ&contentType=json&lang=id`;
+    const today = new Date();
+    const todayString = today.toISOString();
+    const tomorrow = new Date(today.setDate(today.getDate() + 1));
+    const tomorrowString = tomorrow.toISOString();
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${todayString}/${tomorrowString}?key=79A79ES6BP5MNJBRSCYC6UBYQ&contentType=json&lang=id`;
     const weatherData = await getWeatherData(url);
+    console.log(weatherData);
     const processedData = processWeatherData(weatherData);
     console.log(processedData);
     return processedData;
@@ -94,6 +102,7 @@ function userInterface () {
     dateIntervalID = setInterval(displayCurrentDate, 1000*60, processedData.timezone);
     displayCurrentTime(processedData.timezone);
     timeIntervalID = setInterval(displayCurrentTime, 1000, processedData.timezone);
+    displayDayOfWeek(processedData.timezone);
     displayBackground(processedData.sunrise, processedData.sunset, processedData.timezone);
     displayConditionImage(processedData.currentConditions);
   });
@@ -111,6 +120,14 @@ function displayCurrentDate (timezone) {
   date.textContent = '';
   const zonedDate = formatInTimeZone(new Date(), timezone, 'PPP');
   date.textContent = zonedDate;
+}
+
+function displayDayOfWeek (timezone) {
+  const weekday = document.querySelector('#weekday');
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const currentDate = formatInTimeZone(new Date(), timezone, 'yyyy-MM-dd');
+  const day = new Date(currentDate).getUTCDay();
+  weekday.textContent = daysOfWeek[day];
 }
 
 function displayConditionImage (conditions) {
@@ -147,9 +164,9 @@ function displayBackground(sunrise, sunset, timezone) {
   const utcDateSunrise = fromZonedTime(dateWithSunrise, timezone);
   const utcDateSunset = fromZonedTime(dateWithSunset, timezone);
   if (utcDateSunrise < new Date() && new Date() < utcDateSunset) {
-    container.style.background = "rgb(89, 202, 240)";
+    container.style.background = "linear-gradient(rgb(89, 202, 240), rgb(64, 201, 243))";
   } else {
-    container.style.background = "linear-gradient(rgb(106, 106, 128), rgb(49, 49, 58))";
+    container.style.background = "linear-gradient(rgb(33, 4, 100), rgb(19, 3, 49))";
   }
 }
 
