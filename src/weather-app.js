@@ -172,6 +172,7 @@ function displayBackground(sunrise, sunset, timezone) {
 }
 
 function displayForecast(todayForecast, tomorrowForecast, timezone) {
+  const hours = ['12am', '3am', '6am', '9am', '12pm', '3pm', '6pm', '9pm'];
   const forecastContainer = document.querySelector('#forecast-container');
   forecastContainer.textContent = '';
   const currentHour = Number(formatInTimeZone(new Date(), timezone, 'H'));
@@ -179,13 +180,20 @@ function displayForecast(todayForecast, tomorrowForecast, timezone) {
   let count = 0;
   while (count < 4) {
     const forecastDiv = document.createElement('div');
+    const timeDiv = document.createElement('div');
+    const tempDiv = document.createElement('div');
+    forecastDiv.appendChild(timeDiv);
+    forecastDiv.appendChild(tempDiv);
     forecastContainer.appendChild(forecastDiv);
+
     if (hourIndex < 8) {  
-      forecastDiv.textContent = todayForecast[hourIndex].temp;
+      timeDiv.textContent = hours[hourIndex];
+      tempDiv.textContent = todayForecast[hourIndex].temp;
       hourIndex += 1;
     } else {
       const tomorrowHourIndex = hourIndex - 8;
-      forecastDiv.textContent = tomorrowForecast[tomorrowHourIndex].temp;
+      timeDiv.textContent = hours[tomorrowHourIndex];
+      tempDiv.textContent = tomorrowForecast[tomorrowHourIndex].temp;
       hourIndex += 1;
     }
     count += 1;
