@@ -105,7 +105,11 @@ function userInterface () {
     displayDayOfWeek(processedData.timezone);
     displayForecast(processedData.forecastToday, processedData.forecastTomorrow, processedData.timezone);
     displayBackground(processedData.sunrise, processedData.sunset, processedData.timezone);
-    displayConditionImage(processedData.currentConditions);
+    const img = document.querySelector('#condition-icon');
+    const imageSrc = displayConditionImage(processedData.currentConditions);
+    if (imageSrc != null) {
+      img.src = imageSrc;
+    }
   });
 }
 
@@ -132,8 +136,6 @@ function displayDayOfWeek (timezone) {
 }
 
 function displayConditionImage (conditions) {
-  const img = document.querySelector('#condition-icon');
-  
   const snowRegex = /\b(type_1|type_22|type_23|type_31|type_32|type_33|type_34|type_35)\b/;
   const rainRegex = /\b(type_2|type_3|type_4|type_5|type_6|type_9|type_10|type_11|type_13|type_14|type_21|type_24|type_25|type_26)\b/;
   const overcastRegex = /\btype_41\b/;
@@ -141,19 +143,22 @@ function displayConditionImage (conditions) {
   const sunnyRegex = /\btype_43\b/;
 
   if (snowRegex.test(conditions)) {
-    img.src = snowImage;
+    return snowImage;
   }
   else if (rainRegex.test(conditions)) {
-    img.src = rainImage;
+    return rainImage;
   }
   else if (overcastRegex.test(conditions)) {
-    img.src = overcastImage;
+    return overcastImage;
   }
   else if (partlyCloudyRegex.test(conditions)) {
-    img.src = partlyCloudyImage;
+    return partlyCloudyImage;
   }
   else if (sunnyRegex.test(conditions)) {
-    img.src = sunnyImage;
+    return sunnyImage;
+  }
+  else {
+    return null;
   }
 }
 
@@ -188,12 +193,12 @@ function displayForecast(todayForecast, tomorrowForecast, timezone) {
 
     if (hourIndex < 8) {  
       timeDiv.textContent = hours[hourIndex];
-      tempDiv.textContent = todayForecast[hourIndex].temp;
+      tempDiv.textContent = todayForecast[hourIndex].temp + "\u00B0";
       hourIndex += 1;
     } else {
       const tomorrowHourIndex = hourIndex - 8;
       timeDiv.textContent = hours[tomorrowHourIndex];
-      tempDiv.textContent = tomorrowForecast[tomorrowHourIndex].temp;
+      tempDiv.textContent = tomorrowForecast[tomorrowHourIndex].temp + "\u00B0";
       hourIndex += 1;
     }
     count += 1;
