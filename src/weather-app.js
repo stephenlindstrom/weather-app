@@ -51,11 +51,11 @@ function processWeatherData (data) {
     sunrise: data.currentConditions.sunrise,
     sunset: data.currentConditions.sunset,
     forecastToday: [0, 3, 6, 9, 12, 15, 18, 21].map(hour => ({
-      temp: data.days[0].hours[hour]?.temp ?? 'N/A',
+      temp: Math.round(data.days[0].hours[hour]?.temp) ?? 'N/A',
       conditions: data.days[0].hours[hour]?.conditions || 'Unknown',
     })),
     forecastTomorrow: [0, 3, 6, 9, 12, 15, 18, 21].map(hour => ({
-      temp: data.days[1].hours[hour]?.temp ?? 'N/A',
+      temp: Math.round(data.days[1].hours[hour]?.temp) ?? 'N/A',
       conditions: data.days[1].hours[hour]?.conditions || 'Unknown',
     })),
   };
@@ -103,6 +103,7 @@ function userInterface () {
     displayCurrentTime(processedData.timezone);
     timeIntervalID = setInterval(displayCurrentTime, 1000, processedData.timezone);
     displayDayOfWeek(processedData.timezone);
+    displayForecast(processedData.forecastToday, processedData.forecastTomorrow, processedData.timezone);
     displayBackground(processedData.sunrise, processedData.sunset, processedData.timezone);
     displayConditionImage(processedData.currentConditions);
   });
@@ -167,6 +168,27 @@ function displayBackground(sunrise, sunset, timezone) {
     container.style.background = "linear-gradient(rgb(89, 202, 240), rgb(64, 201, 243))";
   } else {
     container.style.background = "linear-gradient(rgb(33, 4, 100), rgb(19, 3, 49))";
+  }
+}
+
+function displayForecast(todayForecast, tomorrowForecast, timezone) {
+  const forecastContainer = document.querySelector('#forecast-container');
+  forecastContainer.textContent = '';
+  const currentHour = Number(formatInTimeZone(new Date(), timezone, 'H'));
+  let hourIndex = Math.floor(currentHour/3) + 1;
+  let count = 0;
+  while (count < 4) {
+    const forecastDiv = document.createElement('div');
+    forecastContainer.appendChild(forecastDiv);
+    if (hourIndex < 8) {  
+      forecastDiv.textContent = todayForecast[hourIndex].temp;
+      hourIndex += 1;
+    } else {
+      const tomorrowHourIndex = hourIndex - 8;
+      forecastDiv.textContent = tomorrowForecast[tomorrowHourIndex].temp;
+      hourIndex += 1;
+    }
+    count += 1;
   }
 }
 
