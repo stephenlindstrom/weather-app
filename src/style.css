@@ -5,7 +5,6 @@
   width: 500px;
   border: 2px solid black;
   padding: 50px;
-  background-color: red;
   color: white;
 }
 
@@ -26,4 +25,21 @@
   display: flex;
   width: 100%;
   justify-content: space-around;
+}
+
+.forecast {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#search-location {
+  background-color: rgb(230, 230, 233);
+  border-radius: 4px;
+  padding: 3px 10px;
+}
+
+.search-button {
+  background-color: rgb(230, 230, 233);
+  border-radius: 4px;
 }
