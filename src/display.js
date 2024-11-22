@@ -6,7 +6,7 @@ import overcastImage from './icons/overcast-white.png';
 import partlyCloudyImage from './icons/partly-cloudy-white.png';
 import main from "./dataHandling";
 
-export default userInterface;
+export { userInterface, getConditionImage, isDay };
 
 let dateIntervalID;
 let timeIntervalID;
@@ -141,17 +141,16 @@ function getConditionImage (conditions) {
   }
 }
 
-function displayBackground(sunrise, sunset, timezone) {
-  const container = document.querySelector('.flex-container-column');
+function isDay(sunrise, sunset, timezone) {
   const currentDate = formatInTimeZone(new Date(), timezone, 'yyyy-MM-dd');
   const dateWithSunrise = currentDate + "T" + sunrise;
   const dateWithSunset = currentDate + "T" + sunset;
   const utcDateSunrise = fromZonedTime(dateWithSunrise, timezone);
   const utcDateSunset = fromZonedTime(dateWithSunset, timezone);
   if (utcDateSunrise < new Date() && new Date() < utcDateSunset) {
-    container.style.background = "linear-gradient(rgb(89, 202, 240), rgb(64, 201, 243))";
+    return true;
   } else {
-    container.style.background = "linear-gradient(rgb(33, 4, 100), rgb(19, 3, 49))";
+    return false;
   }
 }
 
@@ -211,7 +210,13 @@ function displayWeather (processedData) {
   displayCurrentTime(processedData.timezone);
   timeIntervalID = setInterval(displayCurrentTime, 1000, processedData.timezone);
   displayForecast(processedData.forecastToday, processedData.forecastTomorrow, processedData.timezone);
-  displayBackground(processedData.sunrise, processedData.sunset, processedData.timezone);
+  const daytime = isDay(processedData.sunrise, processedData.sunset, processedData.timezone);
+  const container = document.querySelector('.flex-container-column');
+  if (daytime) {
+    container.style.background = "linear-gradient(rgb(89, 202, 240), rgb(64, 201, 243))";
+  } else {
+    container.style.background = "linear-gradient(rgb(33, 4, 100), rgb(19, 3, 49))";
+  }
   const img = document.querySelector('#condition-icon');
   const imageSrc = getConditionImage(processedData.currentConditions);
   if (imageSrc != null) {
