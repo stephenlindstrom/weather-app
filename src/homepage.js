@@ -3,6 +3,8 @@ import main from "./dataHandling";
 export default displayHomePage;
 
 async function displayHomePage () {
+  document.body.textContent = '';
+  
   const processedData1 = await main('Los Angeles');
   const processedData2 = await main('New York');
   const processedData3 = await main('London');

@@ -3,15 +3,27 @@ import snowImage from './icons/snow-white.png';
 import sunnyImage from './icons/sunny-white.png';
 import rainImage from './icons/rain-white.png';
 import overcastImage from './icons/overcast-white.png';
+import home from './icons/home.png';
 import partlyCloudyImage from './icons/partly-cloudy-white.png';
 import main from "./dataHandling";
+import displayHomePage from "./homepage";
 
-export { userInterface, getConditionImage, isDay };
+export { userInterface, getConditionImage, isDay, dateIntervalID, timeIntervalID };
 
 let dateIntervalID;
 let timeIntervalID;
 
 function createWeatherPageContainer () {
+  const weatherDisplay = document.createElement('div');
+  weatherDisplay.classList.add('weather-display');
+
+  const homeIcon = document.createElement('input');
+  homeIcon.type = 'image'
+  homeIcon.src = home;
+  homeIcon.id = 'home-icon';
+  homeIcon.alt = 'Home button';
+  weatherDisplay.appendChild(homeIcon);
+
   const flexContainerCol = document.createElement('div');
   flexContainerCol.classList.add('flex-container-column');
 
@@ -52,7 +64,8 @@ function createWeatherPageContainer () {
   searchButton.classList.add('search-button');
   searchButton.classList.add('flex-item');
 
-  document.body.appendChild(flexContainerCol);
+  document.body.appendChild(weatherDisplay);
+  weatherDisplay.appendChild(flexContainerCol);
   flexContainerCol.appendChild(date);
   flexContainerCol.appendChild(time);
   flexContainerCol.appendChild(location);
@@ -73,9 +86,19 @@ async function userInterface () {
   const searchButton = document.querySelector('.search-button');
   const locationInput = document.querySelector('#search-location');
 
+  const homeButton = document.querySelector('#home-icon');
+
   searchButton.addEventListener('click', async function () {
     const processedData = await main(locationInput.value); 
     displayWeather(processedData); });
+
+  homeButton.addEventListener('click', () => {
+    clearInterval(timeIntervalID);
+    clearInterval(dateIntervalID);
+    displayHomePage();
+  });
+
+  
   
   // searchButton.addEventListener('click', async () => {
   //   location.textContent = '';
@@ -211,7 +234,7 @@ function displayWeather (processedData) {
   timeIntervalID = setInterval(displayCurrentTime, 1000, processedData.timezone);
   displayForecast(processedData.forecastToday, processedData.forecastTomorrow, processedData.timezone);
   const daytime = isDay(processedData.sunrise, processedData.sunset, processedData.timezone);
-  const container = document.querySelector('.flex-container-column');
+  const container = document.querySelector('.weather-display');
   if (daytime) {
     container.style.background = "linear-gradient(rgb(89, 202, 240), rgb(64, 201, 243))";
   } else {
