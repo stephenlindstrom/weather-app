@@ -46,6 +46,7 @@
 .search-button {
   background-color: rgb(230, 230, 233);
   border-radius: 4px;
+  cursor: pointer;
 }
 
 .grid-container {
