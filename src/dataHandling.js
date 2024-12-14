@@ -63,7 +63,8 @@ async function main (location) {
     const todayString = today.toISOString();
     const tomorrow = new Date(today.setDate(today.getDate() + 1));
     const tomorrowString = tomorrow.toISOString();
-    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${todayString}/${tomorrowString}?key=79A79ES6BP5MNJBRSCYC6UBYQ&contentType=json&lang=id`;
+    const apiKey = process.env.API_KEY;
+    const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${todayString}/${tomorrowString}?key=${apiKey}&contentType=json&lang=id`;
     const weatherData = await getWeatherData(url);
     console.log(weatherData);
     const processedData = processWeatherData(weatherData);
