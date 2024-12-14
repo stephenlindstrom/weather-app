@@ -97,30 +97,6 @@ async function userInterface () {
     clearInterval(dateIntervalID);
     displayHomePage();
   });
-
-  
-  
-  // searchButton.addEventListener('click', async () => {
-  //   location.textContent = '';
-  //   currentTemp.textContent = '';
-  //   clearInterval(dateIntervalID);
-  //   clearInterval(timeIntervalID);
-  //   const searchLocation = locationInput.value;
-  //   const processedData = await main(searchLocation);
-  //   location.textContent = processedData.location;
-  //   currentTemp.textContent = processedData.currentTemp + "\u00B0";
-  //   displayCurrentDate(processedData.timezone);
-  //   dateIntervalID = setInterval(displayCurrentDate, 1000*60, processedData.timezone);
-  //   displayCurrentTime(processedData.timezone);
-  //   timeIntervalID = setInterval(displayCurrentTime, 1000, processedData.timezone);
-  //   displayForecast(processedData.forecastToday, processedData.forecastTomorrow, processedData.timezone);
-  //   displayBackground(processedData.sunrise, processedData.sunset, processedData.timezone);
-  //   const img = document.querySelector('#condition-icon');
-  //   const imageSrc = getConditionImage(processedData.currentConditions);
-  //   if (imageSrc != null) {
-  //     img.src = imageSrc;
-  //   }
-  // });
 }
 
 function displayCurrentTime (timezone) {

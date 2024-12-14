@@ -1,7 +1,4 @@
-// import dotenv from 'dotenv';
 export default main;
-
-// dotenv.config();
 
 async function getWeatherData (url) {
   try {
@@ -66,7 +63,6 @@ async function main (location) {
     const todayString = today.toISOString();
     const tomorrow = new Date(today.setDate(today.getDate() + 1));
     const tomorrowString = tomorrow.toISOString();
-    // const apiKey = process.env.WEATHER_API_KEY;
     const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}/${todayString}/${tomorrowString}?key=79A79ES6BP5MNJBRSCYC6UBYQ&contentType=json&lang=id`;
     const weatherData = await getWeatherData(url);
     console.log(weatherData);
