@@ -24,9 +24,14 @@
     "webpack-merge": "^6.0.1"
   },
   "dependencies": {
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.4.7",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
+    "process": "^0.11.10"
   }
 }
