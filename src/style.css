@@ -51,8 +51,8 @@
 
 .grid-container {
   display: grid;
-  grid-template-columns: 400px 400px;
-  grid-template-rows: 400px 400px;
+  grid-template-columns: 300px 300px;
+  grid-template-rows: 300px 300px;
   gap: 20px;
 }
 
@@ -62,7 +62,17 @@
   align-items: center;
   justify-content: center;
   color: white;
-  height: 400px;
-  width: 400px;
+  height: 300px;
+  width: 300px;
   border: 2px solid black;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: grey;
+  width: max(50%, 820px);
+  padding: 50px;
+  margin: 0 auto;
 }
