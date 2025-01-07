@@ -77,6 +77,10 @@
   margin: 0 auto;
 }
 
+.slideshow-container {
+  color: white;
+}
+
 .slides {
   display: none;
 }

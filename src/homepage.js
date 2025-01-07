@@ -4,20 +4,16 @@ export default displayHomePage;
 // issue with timeout and style
 async function displayHomePage () {
   let slideIndex = 1;
-  let timeoutId;
+  let slideTimeoutId;
+  let reloadTimeoutId;
+
   document.body.textContent = '';
   
-  const processedData1 = await main('Los Angeles');
-  const processedData2 = await main('New York');
-  const processedData3 = await main('London');
-  const processedData4 = await main('Tokyo'); 
-
   createHomePage();
-  displayWeatherBrief(processedData1, 'item1');
-  displayWeatherBrief(processedData2, 'item2');
-  displayWeatherBrief(processedData3, 'item3');
-  displayWeatherBrief(processedData4, 'item4');
-
+  loadAndDisplayWeather();
+  reloadTimeoutId = setTimeout(function () {
+    loadAndDisplayWeather ();
+  }, 15*60^1000);
   showSlides(slideIndex);
 
   const nextButton = document.querySelector('.next');
@@ -39,19 +35,20 @@ async function displayHomePage () {
 
   const button = document.querySelector('#home-search-button');
   button.addEventListener('click', () => {
-    clearTimeout(timeoutId);
+    clearTimeout(slideTimeoutId);
+    clearTimeout(reloadTimeoutId);
+    userInterface();
   });
-  button.addEventListener('click', userInterface);
 
   // Next/previous controls
   function plusSlides(n) {
-    clearTimeout(timeoutId);
+    clearTimeout(slideTimeoutId);
     showSlides(slideIndex += n);
   }
 
   // Thumbnail image controls
   function currentSlide(n) {
-    clearTimeout(timeoutId);
+    clearTimeout(slideTimeoutId);
     showSlides(slideIndex = n);
   }
 
@@ -73,7 +70,7 @@ async function displayHomePage () {
 
     slides[slideIndex-1].style.display = "block";
     dots[slideIndex-1].className += " active";
-    timeoutId = setTimeout(function () {
+    slideTimeoutId = setTimeout(function () {
       plusSlides(1);
     }, 5000);
   }
@@ -203,3 +200,16 @@ function displayWeatherBrief (processedData, item) {
     itemContainer.style.background = "linear-gradient(rgb(33, 4, 100), rgb(19, 3, 49))";
   }
 }
+
+async function loadAndDisplayWeather () {
+  const processedData1 = await main('Los Angeles');
+  const processedData2 = await main('New York');
+  const processedData3 = await main('London');
+  const processedData4 = await main('Tokyo');
+
+  displayWeatherBrief(processedData1, 'item1');
+  displayWeatherBrief(processedData2, 'item2');
+  displayWeatherBrief(processedData3, 'item3');
+  displayWeatherBrief(processedData4, 'item4');
+}
+  
