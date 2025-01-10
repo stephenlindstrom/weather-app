@@ -79,8 +79,42 @@
 
 .slideshow-container {
   color: white;
+  background-color: grey;
+  padding: 20px;
+  font-size: 2rem;
 }
 
 .slides {
-  display: none;
+  margin: 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  width: 500px;
+  height: 700px;
+}
+
+.slides > .location {
+  margin-bottom: 10px;
+}
+
+.slides > img {
+  height: 100px;
+  width: 100px;
+  margin-bottom: 10px;
+}
+
+.dot {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+  margin: 0 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  transition: #bbb 0.6s ease;
+}
+
+.active, .dot:hover {
+  background-color: #717171;
 }
