@@ -13,7 +13,7 @@ async function displayHomePage () {
   loadAndDisplayWeather();
   reloadTimeoutId = setTimeout(function () {
     loadAndDisplayWeather ();
-  }, 15*60^1000);
+  }, 15*60*1000);
   showSlides(slideIndex);
 
   const nextButtons = document.querySelectorAll('.next');
@@ -124,12 +124,15 @@ function createHomePage () {
   temp1.id = 'item1-temp';
   temp1.classList.add('temp');
 
+  const arrowButtons1 = document.createElement('div');
+  arrowButtons1.classList.add('arrow-buttons');
   const prevButton1 = document.createElement('button');
   prevButton1.textContent = '\u2190';
   prevButton1.classList.add('prev');
   const nextButton1 = document.createElement('button');
   nextButton1.textContent = '\u2192';
   nextButton1.classList.add('next');
+  
 
   const item1Dots = document.createElement('div');
   item1Dots.id = 'item1-dots';
@@ -147,12 +150,14 @@ function createHomePage () {
   item1Dots.appendChild(item1Dot3);
   item1Dots.appendChild(item1Dot4);
 
+  arrowButtons1.appendChild(prevButton1);
+  arrowButtons1.appendChild(item1Dots);
+  arrowButtons1.appendChild(nextButton1);
+
   item1.appendChild(location1);
   item1.appendChild(img1);
   item1.appendChild(temp1);
-  item1.appendChild(prevButton1);
-  item1.appendChild(nextButton1);
-  item1.appendChild(item1Dots);
+  item1.appendChild(arrowButtons1);
 
   const item2 = document.createElement('div');
   item2.classList.add('slides');
@@ -166,6 +171,8 @@ function createHomePage () {
   temp2.id = 'item2-temp';
   temp2.classList.add('temp');
 
+  const arrowButtons2 = document.createElement('div');
+  arrowButtons2.classList.add('arrow-buttons');
   const prevButton2 = document.createElement('button');
   prevButton2.textContent = '\u2190';
   prevButton2.classList.add('prev');
@@ -189,12 +196,14 @@ function createHomePage () {
   item2Dots.appendChild(item2Dot3);
   item2Dots.appendChild(item2Dot4);
 
+  arrowButtons2.appendChild(prevButton2);
+  arrowButtons2.appendChild(item2Dots);
+  arrowButtons2.appendChild(nextButton2);
+
   item2.appendChild(location2);
   item2.appendChild(img2);
   item2.appendChild(temp2);
-  item2.appendChild(prevButton2);
-  item2.appendChild(nextButton2);
-  item2.appendChild(item2Dots);
+  item2.appendChild(arrowButtons2);
 
   const item3 = document.createElement('div');
   item3.classList.add('slides');
@@ -208,6 +217,8 @@ function createHomePage () {
   temp3.id = 'item3-temp';
   temp3.classList.add('temp');
 
+  const arrowButtons3 = document.createElement('div');
+  arrowButtons3.classList.add('arrow-buttons');
   const prevButton3 = document.createElement('button');
   prevButton3.textContent = '\u2190';
   prevButton3.classList.add('prev');
@@ -231,12 +242,14 @@ function createHomePage () {
   item3Dots.appendChild(item3Dot3);
   item3Dots.appendChild(item3Dot4);
 
+  arrowButtons3.appendChild(prevButton3);
+  arrowButtons3.appendChild(item3Dots);
+  arrowButtons3.appendChild(nextButton3);
+
   item3.appendChild(location3);
   item3.appendChild(img3);
   item3.appendChild(temp3);
-  item3.appendChild(prevButton3);
-  item3.appendChild(nextButton3);
-  item3.appendChild(item3Dots);
+  item3.appendChild(arrowButtons3);
 
   const item4 = document.createElement('div');
   item4.classList.add('slides');
@@ -250,6 +263,8 @@ function createHomePage () {
   temp4.id = 'item4-temp';
   temp4.classList.add('temp');
 
+  const arrowButtons4 = document.createElement('div');
+  arrowButtons4.classList.add('arrow-buttons');
   const prevButton4 = document.createElement('button');
   prevButton4.textContent = '\u2190';
   prevButton4.classList.add('prev');
@@ -273,20 +288,19 @@ function createHomePage () {
   item4Dots.appendChild(item4Dot3);
   item4Dots.appendChild(item4Dot4);
 
+  arrowButtons4.appendChild(prevButton4);
+  arrowButtons4.appendChild(item4Dots);
+  arrowButtons4.appendChild(nextButton4);
+
   item4.appendChild(location4);
   item4.appendChild(img4);
   item4.appendChild(temp4);
-  item4.appendChild(prevButton4);
-  item4.appendChild(nextButton4);
-  item4.appendChild(item4Dots);
+  item4.appendChild(arrowButtons4);
 
   slideshowContainer.appendChild(item1);
   slideshowContainer.appendChild(item2);
   slideshowContainer.appendChild(item3);
   slideshowContainer.appendChild(item4);
-  
-  pageContainer.appendChild(slideshowContainer);
-
 
   const input = document.createElement('input');
   input.type = 'search';
@@ -296,8 +310,10 @@ function createHomePage () {
   button.id ='home-search-button';
   button.textContent = 'Search location';
 
-  pageContainer.appendChild(input);
-  pageContainer.appendChild(button);
+  slideshowContainer.appendChild(input);
+  slideshowContainer.appendChild(button);
+
+  pageContainer.appendChild(slideshowContainer);
   document.body.appendChild(pageContainer);
 }  
   
