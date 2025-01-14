@@ -7,6 +7,7 @@ import home from './icons/home.png';
 import partlyCloudyImage from './icons/partly-cloudy-white.png';
 import main from "./dataHandling";
 import displayHomePage from "./homepage";
+import "./searchPageStyle.css";
 
 export { userInterface, getConditionImage, isDay, dateIntervalID, timeIntervalID };
 

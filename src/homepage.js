@@ -109,6 +109,12 @@ async function displayHomePage () {
 
 function createHomePage () {
   const pageContainer = document.createElement('div');
+  pageContainer.classList.add('page-container');
+
+  const header = document.createElement('h1');
+  header.textContent = "Weather Dashboard"
+  pageContainer.appendChild(header);
+
   const slideshowContainer = document.createElement('div');
   slideshowContainer.classList.add('slideshow-container');
   

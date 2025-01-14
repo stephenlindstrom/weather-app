@@ -1,4 +1,4 @@
-import "./style.css";
+import "./homePageStyle.css";
 import displayHomePage from "./homepage";
 
 displayHomePage();
