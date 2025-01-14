@@ -13,7 +13,7 @@ async function displayHomePage () {
   loadAndDisplayWeather();
   reloadTimeoutId = setTimeout(function () {
     loadAndDisplayWeather ();
-  }, 15*60*1000);
+  }, 1*60*1000);
   showSlides(slideIndex);
 
   const nextButtons = document.querySelectorAll('.next');
