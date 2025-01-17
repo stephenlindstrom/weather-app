@@ -15,6 +15,8 @@ let dateIntervalID;
 let timeIntervalID;
 
 function createWeatherPageContainer () {
+  const weatherInfoPage = document.createElement('div');
+  weatherInfoPage.classList.add('weather-info-page');
   const weatherDisplay = document.createElement('div');
   weatherDisplay.classList.add('weather-display');
 
@@ -48,6 +50,7 @@ function createWeatherPageContainer () {
   currentTemp.classList.add('flex-item');
 
   const forecastHeader = document.createElement('div');
+  forecastHeader.classList.add('forecast-header');
   forecastHeader.textContent = 'Forecast';
 
   const forecastContainer = document.createElement('div');
@@ -65,7 +68,9 @@ function createWeatherPageContainer () {
   searchButton.classList.add('search-button');
   searchButton.classList.add('flex-item');
 
-  document.body.appendChild(weatherDisplay);
+
+  document.body.appendChild(weatherInfoPage);
+  weatherInfoPage.appendChild(weatherDisplay);
   weatherDisplay.appendChild(flexContainerCol);
   flexContainerCol.appendChild(date);
   flexContainerCol.appendChild(time);
